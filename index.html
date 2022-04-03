@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://kit.fontawesome.com/198c4d6390.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="style/style.css">
+  <title>Tower Defense</title>
+</head>
+  <body>
+    <!--
+      To do:
+      - Muziek volume behouden na druk op 'back' button           -> (href="index.html") weghalen op 'Back button' en met visibility terug ipv link
+      - Muziek niet vanaf begin afspelen bij switchen visibility  -> (href="index.html") weghalen op 'Back button' en met visibility terug ipv link
+      - Verschillende muziek keuzes                               -> Eerst muziek goed werkend maken
+      - Function maken voor switchen van levels                   -> Zodra er meerdere levels zijn
+    -->
+
+    <div class="area">
+      <ul class="circles">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </div>
+
+    <!-- <audio src="music/(Official) Tower Defense Simulator OST - First Contact.mp3" autoplay loop controls hidden></audio> -->
+
+    <div class="context">
+      <div id="index" class="wrapper">
+        <img class="logo" src="images/logo.png" alt="logo">
+
+        <div class="center">
+          <a class="button" id="button" data-toggles="#gameScreen" onclick="startgame(1)">Start game</a>
+          <br>
+          <a class="button" id="button" data-toggles="#levelScreen">Level select</a>
+          <br>
+          <a class="button" id="button" data-toggles="#optionScreen">Options</a>
+        </div>
+      </div>
+
+      <div id="optionScreen" class="wrapper">
+        <a class="button" id="button" data-toggles="#index">Back</a>
+        <h1 style=" text-align: center;">Options</h1>
+      
+        <div class="center" style="position:relative; padding: 100px 0px 0px 600px;">
+          <h4>Change music volume</h4>
+          <div class="volume-slider-con"><i id="icon" class="fa fa-volume-down"></i>
+            <div class="volume-slider" id="button"><i id="icon" style="float: right; position: relative;" class="fa fa-volume-up"></i></div>
+          </div> 
+
+          <br>
+
+          <h4>Choose music</h4>
+        </div>
+      </div>
+      
+      <div id="levelScreen" class="wrapper">
+        <a class="button" id="button" data-toggles="#index">Back</a>
+        <h1 style=" text-align: center;">Select level</h1>
+
+        <div class="center">
+          <div class="content" id="button">
+            <span>Level 1</span>
+            <a data-toggles="#gameScreen" onclick="startgame(1)"><i class="fa-solid fa-play"></i></a>
+            <br>
+          </div>
+
+          <div class="content" id="button">
+            <span>Level 2</span>
+            <a data-toggles="#gameScreen" onclick="startgame(2)"><i class="fa-solid fa-play"></i></a>
+            <br>
+          </div>
+
+          <div class="content" id="button">
+            <span>Level 3</span>
+            <a data-toggles="#gameScreen" onclick="startgame(3)"><i class="fa-solid fa-play"></i></a>
+            <br>
+          </div>
+        </div>
+      </div>
+
+      <div id="gameScreen" class="wrapper">
+        <div class="info">
+          <a class="button" id="button" data-toggles="#index">Menu</a>
+          <a class="button" onclick="startgame('restart')" id="button">Restart</a>
+          <p class="witeText"><b style="margin-left: 10px;">Health: </b><span id="health">0</span></p>
+          <p class="witeText"><b style="margin-left: 10px;">Money: </b><span id="money">0</span></p>
+          <p class="witeText"><b style="margin-left: 10px;">Score: </b><span id="score">0</span></p>
+          <p class="witeText"><b style="margin-left: 10px;">change field size: </b><input type = "range" step="2" min="20" max="40" value="34" id="mapSizeSlider" class="slider"></p>
+          <!-- test voor andere healthbar
+            ---------------------------------- niet weghalen!! ------------------------
+            <progress id="health_progressbar" value="50" max="100"></progress> 
+          -->
+        </div>
+        <canvas id="myCanvas"></canvas>
+      </div>
+    </div>
+
+    <script src="script/volume.js"></script>
+    <script src="script/maps.js"></script>
+    <script src="script/visibility.js"></script>
+    <script src="script/tower_defense.js"></script>
+  </body>
+</html>

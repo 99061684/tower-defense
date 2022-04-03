@@ -1,0 +1,304 @@
+.wrapper {
+  display: none;
+}
+
+.wrapper.active {
+  display: block;
+}
+
+body{
+  background-color: #F1F1E6;
+  overflow: hidden;
+}
+
+.center {
+  margin: 0;
+  position: absolute;
+  top: 150%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.button {
+  background-color: #005EEA;
+  color: white;
+  width: 100px;
+  padding: 10px 15px;
+  margin-top: 5px;
+  margin-left: 10px;
+  margin-bottom: 15px;
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 5px;
+}
+
+.button:hover {
+  background-color: #0085B6;
+}
+
+.logo{
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+.button:hover {
+  background-color: #0085B6;
+}
+
+h1{
+  color: white;
+  font-weight: bold;
+  font-size: 50px;
+}
+
+h4{
+  color: white;
+}
+
+.volume-slider-con{
+  height: 25px;
+  width: 300px;
+  position: relative;
+  border-radius: 5px;
+  background-color:#ddd;
+  z-index: 2;
+}
+.volume-slider{
+  border-radius: 5px;
+  height: 25px;
+  width: 100%;
+  position:relative;
+  background-color: #005EEA;
+}
+
+#icon{
+  position: absolute; 
+  z-index: 1; 
+  padding: 5px;
+  color: white;
+}
+
+.info{
+  margin-top: -90px;
+  margin-bottom: 5px;
+}
+
+.content{
+  background-color: #005E9B;
+  color: white;
+  width: 100px;
+  padding: 10px 15px;
+  margin-top: 5px;
+  margin-right: 10px;
+  margin-bottom: 15px;
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 5px;
+}
+
+.buttonLevel{
+  height: 100px;
+}
+
+.content {
+  vertical-align: middle;
+  color: white;
+  margin-top: 100px;
+  background-color: #005EEA;
+}   
+
+.content span {
+  display: block;
+}
+
+.witeText {
+  color: white;
+}
+
+#button:hover{
+  background: repeating-linear-gradient(90deg,#0000 0,rgba(255,255,255,0.3) 25%,#0000 50%)#005EEA;
+  background-size:200% 100%;
+  animation: shine 5s infinite linear;
+}
+
+@keyframes shine{
+  0% {
+    background-position: right;    
+  }
+}
+
+*{
+  margin: 0px;
+  padding: 0px;
+}
+
+.context {
+  width: 100%;
+  position: absolute;
+  top: 10%;
+}
+
+.area{
+  background: #76b5e6;  
+  background: -webkit-linear-gradient(to left, #00B2FF, #F1F1E6);  
+  width: 100%;
+  height:100vh;
+}
+
+.circles{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.circles li{
+  position: absolute;
+  display: block;
+  list-style: none;
+  width: 20px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  animation: animate 25s linear infinite;
+  bottom: -150px;
+  
+}
+
+.circles li:nth-child(1){
+  left: 25%;
+  width: 80px;
+  height: 80px;
+  animation-delay: 0s;
+}
+
+
+.circles li:nth-child(2){
+  left: 10%;
+  width: 20px;
+  height: 20px;
+  animation-delay: 2s;
+  animation-duration: 12s;
+}
+
+.circles li:nth-child(3){
+  left: 70%;
+  width: 20px;
+  height: 20px;
+  animation-delay: 4s;
+}
+
+.circles li:nth-child(4){
+  left: 40%;
+  width: 60px;
+  height: 60px;
+  animation-delay: 0s;
+  animation-duration: 18s;
+}
+
+.circles li:nth-child(5){
+  left: 65%;
+  width: 20px;
+  height: 20px;
+  animation-delay: 0s;
+}
+
+.circles li:nth-child(6){
+  left: 75%;
+  width: 110px;
+  height: 110px;
+  animation-delay: 3s;
+}
+
+.circles li:nth-child(7){
+  left: 35%;
+  width: 150px;
+  height: 150px;
+  animation-delay: 7s;
+}
+
+.circles li:nth-child(8){
+  left: 50%;
+  width: 25px;
+  height: 25px;
+  animation-delay: 15s;
+  animation-duration: 45s;
+}
+
+.circles li:nth-child(9){
+  left: 20%;
+  width: 15px;
+  height: 15px;
+  animation-delay: 2s;
+  animation-duration: 35s;
+}
+
+.circles li:nth-child(10){
+  left: 85%;
+  width: 150px;
+  height: 150px;
+  animation-delay: 0s;
+  animation-duration: 11s;
+}
+
+@keyframes animate{
+  0%{
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+    border-radius: 0;
+  }
+
+  100%{
+    transform: translateY(-1000px) rotate(720deg);
+    opacity: 0;
+    border-radius: 50%;
+  }
+}
+
+/*  */
+
+.slider {
+  -webkit-appearance: none;
+  width: 80px;
+  height: 6px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+/* styling voor test andere healthbar. 
+
+---------------------------------- niet weghalen!! ------------------------
+
+progress[value] {
+  -webkit-appearance: none;
+  appearance: none;
+
+  width: 250px;
+  height: 20px;
+}
+
+progress[value]::-webkit-progress-bar {
+  background-color: #eee;
+  border-radius: 2px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+}
+
+progress[value]::-webkit-progress-value {
+  background-image: -webkit-linear-gradient(-45deg, transparent 33%, rgba(0, 0, 0, .1) 33%, rgba(0,0, 0, .1) 66%, transparent 66%),
+      -webkit-linear-gradient(top, rgba(255, 255, 255, .25),rgba(0, 0, 0, .25)),
+      -webkit-linear-gradient(left, #09c, #f44);
+
+  border-radius: 2px; 
+  background-size: 35px 20px, 100% 100%, 100% 100%;
+} */
