@@ -12,12 +12,14 @@ body{
 }
 
 .center {
-  margin: 0;
+  /* margin: 0;
   position: absolute;
   top: 150%;
   left: 50%;
   -ms-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%); */
+  margin: 0 auto;
+  width: fit-content;
 }
 
 .button {
@@ -35,10 +37,6 @@ body{
   border-radius: 5px;
 }
 
-.button:hover {
-  background-color: #0085B6;
-}
-
 .logo{
   margin-left: auto;
   margin-right: auto;
@@ -47,6 +45,7 @@ body{
 
 .button:hover {
   background-color: #0085B6;
+  animation: shine 5s infinite linear;
 }
 
 h1{
@@ -67,6 +66,7 @@ h4{
   background-color:#ddd;
   z-index: 2;
 }
+
 .volume-slider{
   border-radius: 5px;
   height: 25px;
@@ -75,7 +75,7 @@ h4{
   background-color: #005EEA;
 }
 
-#icon{
+.icon{
   position: absolute; 
   z-index: 1; 
   padding: 5px;
@@ -121,9 +121,9 @@ h4{
   color: white;
 }
 
-#button:hover{
-  background: repeating-linear-gradient(90deg,#0000 0,rgba(255,255,255,0.3) 25%,#0000 50%)#005EEA;
-  background-size:200% 100%;
+.button:hover, .volume:hover{
+  background: repeating-linear-gradient(90deg,#0000 0, rgba(255,255,255,0.3) 25%, #0000 50%) #005EEA;
+  background-size:200%, 100%;
   animation: shine 5s infinite linear;
 }
 
@@ -262,8 +262,6 @@ h4{
   }
 }
 
-/*  */
-
 .slider {
   -webkit-appearance: none;
   width: 80px;
@@ -275,6 +273,16 @@ h4{
   -webkit-transition: .2s;
   transition: opacity .2s;
 }
+
+.custom-select {
+  border-radius: 5px;
+  background-color: #005EEA;
+  color: white;
+  padding: 10px 15px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+}
+
 
 /* styling voor test andere healthbar. 
 
