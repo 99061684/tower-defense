@@ -1,10 +1,9 @@
-var select = document.getElementById('select');
-var songSelector = document.getElementById("songSelector");
-var play = document.getElementById("select");
-var player = document.getElementById("player");
-var mainSong = document.getElementById("music");
+const select = document.getElementById('select');
+const songSelector = document.getElementById("songSelector");
+const player = document.getElementById("player");
 
 var audioURLs = {
+  "null": "",
   "song1": "music/(Official) Tower Defense Simulator OST - First Contact.mp3",
   "song2": "music/(Official) Tower Defense Simulator OST - Frost Spirit.mp3",
   "song3": "music/(Official) Tower Defense Simulator OST - Raze The Void.mp3",
@@ -15,7 +14,6 @@ var audioURLs = {
 
 select.addEventListener("click", function(){
   var selectedOption = songSelector.value;
-  
   var audioURL = audioURLs[selectedOption];
 
   player.src = audioURL;

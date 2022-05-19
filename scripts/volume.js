@@ -1,6 +1,6 @@
-var e = document.querySelector('.volume-slider-con');
-var eInner = document.querySelector('.volume-slider');
-var audio = document.querySelector('audio');
+const e = document.querySelector('.volume-slider-con');
+const eInner = document.querySelector('.volume-slider');
+const audio = document.querySelector('audio');
 var drag = false;
 
 e.addEventListener('mousedown',function(ev){

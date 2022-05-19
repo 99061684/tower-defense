@@ -51,7 +51,7 @@
 
           <h4>Choose music</h4>
           <select id="songSelector" class="custom-select">
-            <option value=""><--Select song--></option>
+            <option value="null"><--Select song--></option>
             <option value="song1">First Contact</option>
             <option value="song2">Frost Spirit</option>
             <option value="song3">Raze The Void</option>
@@ -83,6 +83,11 @@
             <span>Level 3</span>
             <i class="fa-solid fa-play"></i>
           </a>
+
+          <a class="content button" data-toggles="#index" onclick="startgame(69)">
+            <span>Level 69</span>
+            <i class="fa-solid fa-play"></i>
+          </a>
         </div>
       </div>
 
@@ -103,10 +108,11 @@
       </div>
     </div>
 
-    <script src="script/volume.js"></script>
-    <script src="script/music.js"></script>
-    <script src="script/maps.js"></script>
-    <script src="script/visibility.js"></script>
-    <script src="script/tower_defense.js"></script>
+    <script src="scripts/volume.js"></script>
+    <script src="scripts/music.js"></script>
+    
+    <script src="scripts/visibility.js"></script>
+    <script src="scripts/tower_defense.js"></script> 
+    <script src="scripts/maps.js"></script>   
   </body>
 </html>
