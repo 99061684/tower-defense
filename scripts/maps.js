@@ -188,6 +188,80 @@ function map1(level, gridboxSize) {
     return map;
 }
 
+//functie voor het aanmaken van map 2
+function map2(gridboxSize) {
+    let map = new maps(gridboxSize);
+    map.calculateCanvasSize(22, 47);
+
+    map.grid[6][8].tower = new Tower("green", map.grid[10][8].gridPosition);
+
+    map.grid[10][26].tower = new Tower("green", map.grid[10][26].gridPosition);
+
+    map.grid[16][34].tower = new Tower("green", map.grid[11][32].gridPosition);
+
+    for (let test = 0; test < 25; test++) {
+        map.grid[4][test].isPath = true;
+    }
+    for (let test = 0; test < 10; test++) {
+        map.grid[test + 4][24].isPath = true;
+    }
+    for (let test = 24; test < 47; test++) {
+        map.grid[14][test].isPath = true;
+    }
+
+    map.spawnpoint = map.calculateMidGridPosition({row: 4, colum: 0});
+
+    map.enemyMovementTargets = [
+        map.calculateMidGridPosition({row:4, colum: 24}),
+        map.calculateMidGridPosition({row:14, colum: 24}),
+        map.calculateMidGridPosition({row:14, colum: 46}),
+    ];
+
+    map.getTowers();
+    map.enemies = [];
+
+    return map;
+}
+
+//functie voor het aanmaken van map 3
+function map3(gridboxSize) {
+    let map = new maps(gridboxSize);
+    map.calculateCanvasSize(22, 47);
+
+    map.grid[6][8].tower = new Tower("red", map.grid[10][8].gridPosition);
+
+    map.grid[12][22].tower = new Tower("red", map.grid[12][22].gridPosition);
+
+    map.grid[16][34].tower = new Tower("red", map.grid[11][32].gridPosition);
+
+    for (let test = 0; test < 25; test++) {
+        map.grid[4][test].isPath = true;
+    }
+    for (let test = 0; test < 10; test++) {
+        map.grid[test + 4][24].isPath = true;
+    }
+    for (let test = 24; test < 42; test++) {
+        map.grid[14][test].isPath = true;
+    }
+    for (let test = 10; test < 18; test++) {
+        map.grid[test + 4][41].isPath = true;
+    }
+
+    map.spawnpoint = map.calculateMidGridPosition({row: 4, colum: 0});
+
+    map.enemyMovementTargets = [
+        map.calculateMidGridPosition({row:4, colum: 24}),
+        map.calculateMidGridPosition({row:14, colum: 24}),
+        map.calculateMidGridPosition({row:14, colum: 41}),
+        map.calculateMidGridPosition({row:21, colum: 41})
+    ];
+
+    map.getTowers();
+    map.enemies = [];
+
+    return map;
+}
+
 //hoe je een nieuwe map kan aamaken (zie bovenstaand voor code van andere maps)
 //1. maak een functie voor het aanmaken van de map
 //2. vul in de functie de volgende regels in:
@@ -232,17 +306,27 @@ class level {
                 new wave(3, this, [{type:"1", amount:3}, {type:"2", amount:1}])
             ];       
         } else if (levelnr == 2){
-            this.health = 12;
-            this.money = 400;
-            this.map = map1(this, 34);
-            this.grid = this.map.grid;
-            this.towers = this.map.towers;
-        }  else if (levelnr == 3){
             this.health = 15;
-            this.money = 200;
-            this.map = map1(this, 34);
+            this.money = 400;
+            this.map = map2(this, 34);
             this.grid = this.map.grid;
             this.towers = this.map.towers;
+            this.waves = [
+                new wave(1, this, [{type:"1", amount:5}]), 
+                new wave(2, this, [{type:"1", amount:6}, {type:"2", amount:2}]),
+                new wave(3, this, [{type:"1", amount:8}, {type:"2", amount:4}])
+            ]; 
+        }  else if (levelnr == 3){
+            this.health = 20;
+            this.money = 200;
+            this.map = map3(this, 34);
+            this.grid = this.map.grid;
+            this.towers = this.map.towers;
+            this.waves = [
+                new wave(1, this, [{type:"1", amount:8}]), 
+                new wave(2, this, [{type:"1", amount:7}, {type:"2", amount:6}]),
+                new wave(3, this, [{type:"1", amount:11}, {type:"2", amount:8}])
+            ]; 
         }
     }
 }

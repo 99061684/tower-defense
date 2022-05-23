@@ -1,4 +1,5 @@
-// drawing setup ------------------------------------------------------
+// drawing setup -------------------------------------------------------
+
 const canvas = document.getElementById("myCanvas");
 const healthSpan = document.getElementById("health");
 const moneySpan = document.getElementById("money");
@@ -7,7 +8,6 @@ const c = canvas.getContext("2d");
 
 var currentLevel = null; 
 var enemy1 = null;
-var updateAnimation = null;
 
 // level scene -------------------------------------------------------
 
@@ -209,61 +209,19 @@ class Enemy {
     }
 
     setType(type){
-        if (type == "purple") {
+        if (type == "testing") {
             this.radius = 20;
             this.color = "purple";
-            this.max_health = 150;
-            this.attack = 1;
-            this.speed = 100;
-        }
-        else if(type == "yellow") {
-            this.radius = 20;
-            this.color = "yellow";
-            this.max_health = 2000;
-            this.attack = 1;
-            this.speed = 10;
-        }
-        else if(type == "green") {
-            this.radius = 20;
-            this.color = "green";
-            this.max_health = 250;
-            this.attack = 1;
-            this.speed = 25;
-        }
-        else if(type == "blue") {
-            this.radius = 20;
-            this.color = "blue";
             this.max_health = 500;
+            this.health = this.max_health;
             this.attack = 1;
             this.speed = 25;
-        }
-        else if(type == "gray") {
+        } else {
             this.radius = 20;
-            this.color = "gray";
-            this.max_health = 1000;
-            this.attack = 1;
-            this.speed = 50;
-        }
-        else if(type == "black") {
-            this.radius = 20;
-            this.color = "black";
-            this.max_health = 500;
-            this.attack = 1;
-            this.speed = 50;
-        }
-        else if(type == "white") {
-            this.radius = 20;
-            this.color = "white";
-            this.max_health = 1000;
-            this.attack = 1;
-            this.speed = 25;
-        }
-        else {
-            this.radius = 20;
-            this.color = "lime";
+            this.color = "purple";
             this.max_health = 20;
+            this.health = this.max_health;
             this.attack = 1;
-            this.speed = 10;
         }
     }
 
@@ -538,7 +496,7 @@ class gridBox {
 }
 
 // startgame -------------------------------------------------------
-function startgame(selectedLevel = 1) {
+function startgame(selectedLevel){
     if (selectedLevel == null) {
         selectedLevel = 1;
     } 
@@ -546,14 +504,9 @@ function startgame(selectedLevel = 1) {
         currentLevel = new level(currentLevel.levelnr);
         currentLevel.paused = false;
         setupScene();
-    } else if(selectedLevel == 69) {
-        level69();
     } else {
         currentLevel = new level(selectedLevel);
         currentLevel.paused = false;
-        if (updateAnimation !== null) {
-            window.cancelAnimationFrame(updateAnimation);
-        }
         setupScene();
         update();
     }
@@ -563,25 +516,6 @@ function startgame(selectedLevel = 1) {
 
 function setupScene() {   
     document.getElementById("mapSizeSlider").value = currentLevel.map.gridboxWidth;
-}
-
-// win -------------------------------------------------------
-
-function levelCompleted() {   
-    currentLevel.paused = true;
-    alert("level completed");
-}
-
-function gameOver() {   
-    // setupScene();
-    currentLevel.paused = true;
-    var myWindow = window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ", "", "fullscreen=yes");
-    alert("Game Over");
-}
-
-function level69() {   
-    var myWindow = window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ", "", "fullscreen=yes");
-    alert("Pranked! LOL (-:");
 }
 
 // draw -------------------------------------------------------
@@ -609,7 +543,7 @@ function simulate()
 
 function update() {
     if (currentLevel.enemies.length == 0) {
-        // spawnEnemyDistance(3, 100);
+        spawnEnemyDistance(3, 100);
     }
     simulate();
     draw();
@@ -624,7 +558,6 @@ function update() {
     scoreSpan.innerHTML = currentLevel.score.toString();
     moneySpan.innerHTML = currentLevel.money.toString();
     healthSpan.innerHTML = currentLevel.health.toString();
-    
     if (canvas.height !== currentLevel.map.canvasHeight) {
         canvas.height = currentLevel.map.canvasHeight;
     }
@@ -633,10 +566,12 @@ function update() {
     }    
 
     if (currentLevel.health <= 0) {
-        gameOver();     
+        currentLevel.paused = true; 
+        window.location.replace("../gameOver.html");
+
     }
     if(!currentLevel.paused){
-        updateAnimation = requestAnimationFrame(update);
+        requestAnimationFrame(update);
     }
 }
 
@@ -683,6 +618,7 @@ function onMouseMove(event) {
         if (gridbox.tower !== null) {
             gridbox.isHover = true;
         } else { 
+            //moet nog maken: zet bij alle gridboxen met towers ishover op false
             gridbox.isHover = false;
         }
     }
@@ -758,7 +694,7 @@ function updateMoney(amount) {
     currentLevel.money = currentLevel.money + amount;
 }   
 
-//---------------- spawn functions -------------
+//---------------- enemy functions -------------
 
 //spawn enemy every second
 function spawnEnemy(amount){
@@ -773,36 +709,37 @@ function spawnEnemy(amount){
 }
 
 //spawn enemy every second when distance between enemies is less then 1000
-function spawnEnemyDistance(enemyType, amount, mindistance){
-    //stop met spawnen als level is paused of als er al max enemies zijn
-    if(currentLevel.paused || currentLevel.enemies.length > currentLevel.maxEnemies){
-        return;
-    }
+function spawnEnemyDistance(amount, mindistance){
     let distance = null;
-    if(typeof enemyType !== 'string') {
-        enemyType = "";	
+    if(currentLevel.paused){
+        return;
     }
     
-    if(currentLevel.enemies.length > 0){ //pakt de distance van de laatste enemy
-        let temp = getCurrentLevelEnemiesSortByFurthest();
+    if(currentLevel.enemies.length > 0){
+        let temp = [];
+        for(var i = 0; i < currentLevel.enemies.length; i++){
+            temp.push({enemy: currentLevel.enemies[i], DistanceToNextTarget: currentLevel.enemies[i].getDistanceToNextTarget()});
+        }
+        temp.sort( function(a, b) {          
+            if (a.enemy.targetnr === b.enemy.targetnr) {
+                return a.DistanceToNextTarget - b.DistanceToNextTarget;
+            }
+            return a.enemy.targetnr > b.enemy.targetnr ? 1 : -1;
+        });
+        // currentLevel.map.spawnpoint = currentLevel.map.calculateMidGridPosition({row: 4, colum: 0});
         distance = getDistance(temp[temp.length - 1]["enemy"].pos.x, temp[temp.length - 1]["enemy"].pos.y, currentLevel.map.spawnpoint.x, currentLevel.map.spawnpoint.y);
-    } else { //distance is true wanneer er geen enemies in het level zijn.
+    } else {
         distance = true;
     }
-
-    if (amount <= 0 || amount == null || distance === null) {
-        return;
-    } else if (distance >= mindistance || distance === true) {
-        let enemy = new Enemy(enemyType, {x: currentLevel.map.spawnpoint.x, y: currentLevel.map.spawnpoint.y, row: currentLevel.map.spawnpoint.row, colum: currentLevel.map.spawnpoint.colum});
+    
+    if(currentLevel.enemies.length < currentLevel.maxEnemies && currentLevel.enemies.length !== amount && amount > 0 && distance !== null && (distance >= mindistance || distance === true)){
+        let enemy = new Enemy("", {x: currentLevel.map.spawnpoint.x, y: currentLevel.map.spawnpoint.y, row: currentLevel.map.spawnpoint.row, colum: currentLevel.map.spawnpoint.colum});
         currentLevel.enemies.push(enemy);
         amount--;
     }
-    if (amount > 0) {
-        setTimeout(spawnEnemyDistance, 0, amount, mindistance);
-    }    
+    setTimeout(spawnEnemyDistance, 0, amount, mindistance);
 }
 
-//---------------- help functions -------------
 function shuffleArray(array) {
     for (var i = array.length - 1; i > 0; i--) {
         var j = Math.floor(Math.random() * (i + 1));
@@ -810,19 +747,5 @@ function shuffleArray(array) {
         array[i] = array[j];
         array[j] = temp;
     }
-    return array;
-}
-
-function getCurrentLevelEnemiesSortByFurthest() {
-    let array = [];
-    for(var i = 0; i < currentLevel.enemies.length; i++){
-        array.push({enemy: currentLevel.enemies[i], DistanceToNextTarget: currentLevel.enemies[i].getDistanceToNextTarget()});
-    }
-    array.sort( function(a, b) {          
-        if (a.enemy.targetnr === b.enemy.targetnr) {
-            return a.DistanceToNextTarget - b.DistanceToNextTarget;
-        }
-        return a.enemy.targetnr > b.enemy.targetnr ? 1 : -1;
-    });
     return array;
 }
