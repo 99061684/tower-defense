@@ -187,10 +187,11 @@ class Enemy {
     radius = 5;
     
     //drawing and movement variables
-    pos = {x: 0, y: 0, row: 0, colum: 0};
+    pos = {pathindex: 0, x: 0, y: 0, row: 0, colum: 0};
     vel = {velX:0, velY:0};
     target = {targetnr:0, x:0, y:0};
     point = {pointLength:20, px:0, py:0};
+
     timer = null;
     attackFunction = null;
     dieAfterAttack = true;
@@ -283,9 +284,9 @@ class Enemy {
 
     update() {
         // get the target x and y
-        if (this.target.targetnr < currentLevel.map.enemyMovementTargets.length) {
-            this.target.x = currentLevel.map.enemyMovementTargets[this.target.targetnr].x;
-            this.target.y = currentLevel.map.enemyMovementTargets[this.target.targetnr].y;
+        if (this.target.targetnr < currentLevel.map.enemyMovementTargets[this.pos.pathindex].length) {
+            this.target.x = currentLevel.map.enemyMovementTargets[this.pos.pathindex][this.target.targetnr].x;
+            this.target.y = currentLevel.map.enemyMovementTargets[this.pos.pathindex][this.target.targetnr].y;
         
             // get the distance
             var tx = this.target.x - this.pos.x;
@@ -311,13 +312,12 @@ class Enemy {
             this.pos.y += this.vel.velY;
             this.calculateGridPosition();
         }else{
-            if(this.target.targetnr != currentLevel.map.enemyMovementTargets.length){
+            console.log(this.target.targetnr, currentLevel.map.enemyMovementTargets[this.pos.pathindex].length);
+            if(this.target.targetnr != currentLevel.map.enemyMovementTargets[this.pos.pathindex].length){
                 this.target.targetnr++;
-            } 
-            
-            if(this.target.targetnr == currentLevel.map.enemyMovementTargets.length){
+            } else {
                 this.attacking();
-            }         
+            }     
         }
     };
     
@@ -416,17 +416,9 @@ class Enemy {
     }
 
     //get the distance to next target
-    getDistanceToTarget(targetnr){
-        var tx = currentLevel.map.enemyMovementTargets[targetnr].x - this.pos.x;
-        var ty = currentLevel.map.enemyMovementTargets[targetnr].y - this.pos.y;
-        var distance = Math.sqrt(tx * tx + ty * ty);
-        return distance;
-    }
-
-    //get the distance to next target
     getDistanceToNextTarget(){
-        var tx = currentLevel.map.enemyMovementTargets[this.target.targetnr].x - this.pos.x;
-        var ty = currentLevel.map.enemyMovementTargets[this.target.targetnr].y - this.pos.y;
+        var tx = currentLevel.map.enemyMovementTargets[this.pos.pathindex][this.target.targetnr].x - this.pos.x;
+        var ty = currentLevel.map.enemyMovementTargets[this.pos.pathindex][this.target.targetnr].y - this.pos.y;
         var distance = Math.sqrt(tx * tx + ty * ty);
         return distance;
     }
@@ -609,15 +601,12 @@ function simulate()
 
 function update() {
     if (currentLevel.enemies.length == 0) {
-        currentLevel.waves.forEach(wave => {
+        for (let i = 0; i < currentLevel.waves.length; i++) {
+            let wave = currentLevel.waves[i];
             if (wave.wavenr == currentLevel.currentwave) {
-                // spawnEnemyDistance(wave.enemies, wave.distance);
+                // spawnEnemyDistance(wave);
+                break;
             }
-        });
-        if (currentLevel.currentwave < currentLevel.waves.length) {
-            currentLevel.currentwave++;
-        } else {
-            levelCompleted();
         }
     }
     simulate();
@@ -769,74 +758,45 @@ function updateMoney(amount) {
 
 //---------------- spawn functions -------------
 
-//spawn enemy every second
-function spawnEnemy(amount){
-    if(currentLevel.paused){
-        return;
-    }
-    if(currentLevel.enemies.length < currentLevel.maxEnemies && currentLevel.enemies.length < amount && amount > 0){
-        let enemy = new Enemy("", currentLevel.map.calculateMidGridPosition({row:4, colum: 0}));
-        currentLevel.enemies.push(enemy);
-        setTimeout(spawnEnemy, 500, amount--);
-    }
-}
-
-//spawn enemy every second when distance between enemies is less then 1000
-// function spawnEnemyDistance(enemyType, amount, mindistance){
-//     //stop met spawnen als level is paused of als er al max enemies zijn
-//     if(currentLevel.paused || currentLevel.enemies.length > currentLevel.maxEnemies){
-//         return;
-//     }
-//     let distance = null;
-//     if(typeof enemyType !== 'string') {
-//         enemyType = "";	
-//     }
-    
-//     if(currentLevel.enemies.length > 0){ //pakt de distance van de laatste enemy
-//         let temp = getCurrentLevelEnemiesSortByFurthest();
-//         distance = getDistance(temp[temp.length - 1]["enemy"].pos.x, temp[temp.length - 1]["enemy"].pos.y, currentLevel.map.spawnpoint.x, currentLevel.map.spawnpoint.y);
-//     } else { //distance is true wanneer er geen enemies in het level zijn.
-//         distance = true;
-//     }
-
-//     if (amount <= 0 || amount == null || distance === null) {
-//         return;
-//     } else if (distance >= mindistance || distance === true) {
-//         let enemy = new Enemy(enemyType, {x: currentLevel.map.spawnpoint.x, y: currentLevel.map.spawnpoint.y, row: currentLevel.map.spawnpoint.row, colum: currentLevel.map.spawnpoint.colum});
-//         currentLevel.enemies.push(enemy);
-//         amount--;
-//     }
-//     if (amount > 0) {
-//         setTimeout(spawnEnemyDistance, 0, amount, mindistance);
-//     }    
-// }
-
-function spawnEnemyDistance(enemies, mindistance){
-    //stop met spawnen als level is paused of als er al max enemies zijn
-    if(currentLevel.paused || currentLevel.enemies.length > currentLevel.maxEnemies){
-        return;
-    }
-    let distance = null;
-    if(typeof enemyType !== 'string') {
-        enemyType = "";	
-    }
-    
-    if(currentLevel.enemies.length > 0){ //pakt de distance van de laatste enemy
-        let temp = getCurrentLevelEnemiesSortByFurthest();
-        distance = getDistance(temp[temp.length - 1]["enemy"].pos.x, temp[temp.length - 1]["enemy"].pos.y, currentLevel.map.spawnpoint.x, currentLevel.map.spawnpoint.y);
-    } else { //distance is true wanneer er geen enemies in het level zijn.
-        distance = true;
+function spawnEnemyDistance(wave){
+    let canspawn = null;
+    let temp = null;
+    if(currentLevel.paused || wave.enemies.length == 0){
+        return false;
+    } else if (wave.getEnemiesSpawned(true).length >= wave.enemies.length) {
+        if (currentLevel.waves.length > 0 && currentLevel.waves.length >= currentLevel.currentWave) {
+            currentLevel.currentWave = wave.wavenr++;
+        }
+        return true;
     }
 
-    if (amount <= 0 || amount == null || distance === null) {
-        return;
-    } else if (distance >= mindistance || distance === true) {
-        let enemy = new Enemy(enemyType, {x: currentLevel.map.spawnpoint.x, y: currentLevel.map.spawnpoint.y, row: currentLevel.map.spawnpoint.row, colum: currentLevel.map.spawnpoint.colum});
-        currentLevel.enemies.push(enemy);
-        amount--;
-    }
-    if (amount > 0) {
-        setTimeout(spawnEnemyDistance, 0, amount, mindistance);
+    let firstEnemyNotSpawned = wave.getFirstEnemySpawned(false, null).enemy;
+
+    if(firstEnemyNotSpawned != null && firstEnemyNotSpawned !== undefined){
+        let pathindex = firstEnemyNotSpawned.pos.pathindex;
+        if(wave.getEnemiesSpawned(true, pathindex).length > 0 && currentLevel.enemies.length > 0){
+            let lastenemy = wave.getLastEnemySpawned(true, pathindex).enemy.enemy;
+            if (lastenemy !== null && lastenemy !== undefined) {
+                if (lastenemy.pos.colum !== wave.spawnpoints[pathindex].colum || lastenemy.pos.row !== wave.spawnpoints[pathindex].row) {
+                    canspawn = true;
+                } else {
+                    canspawn = false;
+                }
+            }
+        } else {
+            canspawn = true;
+        }
+        console.log(canspawn);
+        console.log(wave.enemies);
+
+        if (canspawn) {
+            let index = wave.getFirstEnemySpawned(false, pathindex).index;
+            wave.enemies[index].spawned = true;
+            currentLevel.enemies.push(firstEnemyNotSpawned);
+            console.log(currentLevel.enemies);
+        }
+    } else {
+        return false;
     }    
 }
 
@@ -851,10 +811,14 @@ function shuffleArray(array) {
     return array;
 }
 
-function getCurrentLevelEnemiesSortByFurthest() {
+function getCurrentLevelEnemiesSortByFurthest(pathindex = 0) {
     let array = [];
     for(var i = 0; i < currentLevel.enemies.length; i++){
-        array.push({enemy: currentLevel.enemies[i], DistanceToNextTarget: currentLevel.enemies[i].getDistanceToNextTarget()});
+        if (currentLevel.enemies[i].pos.pathindex === pathindex) {
+            array.push({enemy: currentLevel.enemies[i], DistanceToNextTarget: currentLevel.enemies[i].getDistanceToNextTarget()});
+        } else if (pathindex === null) {
+            array.push({enemy: currentLevel.enemies[i], DistanceToNextTarget: currentLevel.enemies[i].getDistanceToNextTarget()});
+        }
     }
     array.sort( function(a, b) {          
         if (a.enemy.targetnr === b.enemy.targetnr) {

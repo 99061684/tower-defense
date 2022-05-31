@@ -332,11 +332,11 @@ class wave {
         this.wavenr = wavenr;
         this.map = level.map;
         this.grid = this.map.grid;
-        if (enemies !== null && enemies instanceof Array && enemies.length > 0) {
-            this.enemies = this.addEnemies(enemies);
-        }
         this.enemyMovementTargets = this.map.enemyMovementTargets;
         this.spawnpoints = this.map.spawnpoints;
+        if (enemies !== null && enemies instanceof Array && enemies.length > 0) {
+            this.addEnemies(enemies);
+        }
     }
 
     setSpawnpoint(spawnpoint){
@@ -374,6 +374,9 @@ class wave {
 
     getpadindex(){
         // return de index van de laatste pad
+        if (this.enemyMovementTargets.length - 1 < 0) {
+            return 0;
+        }
         return this.enemyMovementTargets.length - 1;
     }
 
@@ -390,7 +393,8 @@ class wave {
                 enemy.amount = 1;
             }
             for (let i = 0; i < enemy.amount; i++) {
-                this.enemies.push({enemy: new Enemy(enemy.type, this.spawnpoints[enemy.pathindex])});
+                this.spawnpoints[enemy.pathindex].pathindex = enemy.pathindex;
+                this.enemies.push({enemy: new Enemy(enemy.type, this.spawnpoints[enemy.pathindex].pathindex = pathindex), spawned: false});
             }
             
         });
@@ -408,10 +412,44 @@ class wave {
                 enemy.amount = 1;
             }
             for (let i = 0; i < enemy.amount; i++) {
-                this.enemies.push({enemy: new Enemy(enemy.type, this.spawnpoints[enemy.pathindex])});
+                this.spawnpoints[enemy.pathindex].pathindex = enemy.pathindex;
+                this.enemies.push({enemy: new Enemy(enemy.type, this.spawnpoints[enemy.pathindex]), spawned: false});
             }
         });
     }
+
+    getEnemiesSpawned(spawned = false, padindex = 0){
+        // spawned = true = alleen de enemies die al gespawned zijn
+        // spawned = false = alleen de enemies die nog niet gespawned zijn
+        if (padindex == undefined || padindex == null) {
+            return this.enemies.filter(element => element.spawned == spawned);
+        }
+        return this.enemies.filter(element => element.spawned == spawned && element.enemy.pos.pathindex == padindex);
+    }
+
+    getLastEnemySpawned(spawned = false, padindex = 0){
+        // spawned = true = alleen de enemies die al gespawned zijn
+        // spawned = false = alleen de enemies die nog niet gespawned zijn
+        let enemies = this.getEnemiesSpawned(spawned, padindex);
+        let index = enemies.length - 1;
+        return {enemy: enemies[index], index: index};
+    }
+
+
+    getFirstEnemySpawned(spawned = false, padindex = 0){
+        // spawned = true = alleen de enemies die al gespawned zijn
+        // spawned = false = alleen de enemies die nog niet gespawned zijn
+        let enemies = this.getEnemiesSpawned(spawned, padindex);
+        let index = 0;
+        for (let i = 0; i < this.enemies.length; i++) {
+            if(this.enemies[i].enemy === enemies[0].enemy && this.enemies[i].spawned == spawned && this.enemies[i].enemy.pos.pathindex == padindex){
+                index = i;
+                break;
+            }            
+        }       
+        return {enemy: enemies[0].enemy, index: index};
+    }
+
 
     setWaveReward(waveReward){
         this.waveReward = waveReward;
