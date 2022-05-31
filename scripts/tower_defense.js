@@ -609,7 +609,16 @@ function simulate()
 
 function update() {
     if (currentLevel.enemies.length == 0) {
-        // spawnEnemyDistance(3, 100);
+        currentLevel.waves.forEach(wave => {
+            if (wave.wavenr == currentLevel.currentwave) {
+                // spawnEnemyDistance(wave.enemies, wave.distance);
+            }
+        });
+        if (currentLevel.currentwave < currentLevel.waves.length) {
+            currentLevel.currentwave++;
+        } else {
+            levelCompleted();
+        }
     }
     simulate();
     draw();
@@ -624,7 +633,7 @@ function update() {
     scoreSpan.innerHTML = currentLevel.score.toString();
     moneySpan.innerHTML = currentLevel.money.toString();
     healthSpan.innerHTML = currentLevel.health.toString();
-    
+
     if (canvas.height !== currentLevel.map.canvasHeight) {
         canvas.height = currentLevel.map.canvasHeight;
     }
@@ -773,7 +782,36 @@ function spawnEnemy(amount){
 }
 
 //spawn enemy every second when distance between enemies is less then 1000
-function spawnEnemyDistance(enemyType, amount, mindistance){
+// function spawnEnemyDistance(enemyType, amount, mindistance){
+//     //stop met spawnen als level is paused of als er al max enemies zijn
+//     if(currentLevel.paused || currentLevel.enemies.length > currentLevel.maxEnemies){
+//         return;
+//     }
+//     let distance = null;
+//     if(typeof enemyType !== 'string') {
+//         enemyType = "";	
+//     }
+    
+//     if(currentLevel.enemies.length > 0){ //pakt de distance van de laatste enemy
+//         let temp = getCurrentLevelEnemiesSortByFurthest();
+//         distance = getDistance(temp[temp.length - 1]["enemy"].pos.x, temp[temp.length - 1]["enemy"].pos.y, currentLevel.map.spawnpoint.x, currentLevel.map.spawnpoint.y);
+//     } else { //distance is true wanneer er geen enemies in het level zijn.
+//         distance = true;
+//     }
+
+//     if (amount <= 0 || amount == null || distance === null) {
+//         return;
+//     } else if (distance >= mindistance || distance === true) {
+//         let enemy = new Enemy(enemyType, {x: currentLevel.map.spawnpoint.x, y: currentLevel.map.spawnpoint.y, row: currentLevel.map.spawnpoint.row, colum: currentLevel.map.spawnpoint.colum});
+//         currentLevel.enemies.push(enemy);
+//         amount--;
+//     }
+//     if (amount > 0) {
+//         setTimeout(spawnEnemyDistance, 0, amount, mindistance);
+//     }    
+// }
+
+function spawnEnemyDistance(enemies, mindistance){
     //stop met spawnen als level is paused of als er al max enemies zijn
     if(currentLevel.paused || currentLevel.enemies.length > currentLevel.maxEnemies){
         return;
